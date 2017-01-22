@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-import {Backd} from './backd'
+import Backd from 'backd-js'
 
 var backd = new Backd({
   urls: {

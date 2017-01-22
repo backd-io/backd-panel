@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <top></top>
+  <div id="app" class="container">
     <router-view></router-view>
+    <top></top>
     <bottom></bottom>
   </div>
 </template>
@@ -14,16 +14,26 @@ export default {
   components: {
     Top,
     Bottom
+  },
+  methods: {
+    goIfLogged (to) {
+      if (!this.$store.state.Backd.loggedIn()) {
+        if (to.path !== '') {
+          console.log('redirecting to /')
+          this.$router.push('')
+        }
+      }
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      console.log('from.path: ' + from.path + ' to.path: ' + to.path)
+      this.goIfLogged(to.path)
+    }
+  },
+  created () {
+    this.goIfLogged(this.$route.path)
   }
 }
-</script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-</style>
+</script>
