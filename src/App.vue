@@ -1,23 +1,28 @@
 <template>
   <div id="app" class="container">
     <router-view></router-view>
-    <top></top>
     <bottom></bottom>
   </div>
 </template>
 
 <script>
-import Top from './components/common/Top'
+// <top></top>
+// import Top from './components/common/Top'
 import Bottom from './components/common/Bottom'
+// components: {
+//   Top,
+//   Bottom
+// },
 
 export default {
   components: {
-    Top,
     Bottom
   },
   methods: {
     goIfLogged (to) {
-      if (!this.$store.state.Backd.loggedIn()) {
+      console.log('goIfLogged: loggedIn=' + this.$store.state.Backd.LoggedIn)
+      if (this.$store.state.Backd.LoggedIn === false) {
+        console.log(to.path)
         if (to.path !== '') {
           console.log('redirecting to /')
           this.$router.push('')
@@ -28,11 +33,11 @@ export default {
   watch: {
     '$route' (to, from) {
       console.log('from.path: ' + from.path + ' to.path: ' + to.path)
-      this.goIfLogged(to.path)
+      this.goIfLogged(to)
     }
   },
   created () {
-    this.goIfLogged(this.$route.path)
+    this.goIfLogged(this.$route)
   }
 }
 
