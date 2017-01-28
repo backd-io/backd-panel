@@ -11,7 +11,7 @@ import VueMaterial from 'vue-material'
 import App from './App'
 
 import Home from './components/Home'
-import DomainIndex from './components/domains/Index'
+import DomainsIndex from './components/domains/Index'
 
 import { store } from './store/store'
 
@@ -25,7 +25,7 @@ const router = new VueRouter({
     },
     {
       path: '/domains',
-      component: DomainIndex
+      component: DomainsIndex
     }
   ]
 })
@@ -33,17 +33,45 @@ const router = new VueRouter({
 Vue.use(VueRouter)
 Vue.use(VueMaterial)
 
-Vue.material.registerTheme('default', {
-  primary: 'red',
-  accent: 'blue-grey',
-  warn: 'deep-orange',
-  background: 'white'
+Vue.material.registerTheme({
+  default: {
+    primary: {
+      color: 'deep-orange',
+      hue: 500
+    },
+    accent: {
+      color: 'orange',
+      hue: 800
+    },
+    warn: 'red',
+    background: 'white'
+  },
+  login: {
+    primary: 'deep-orange',
+    warn: 'red'
+  },
+  bars: {
+    primary: 'orange',
+    warn: 'red'
+  }
 })
 
-Vue.material.registerTheme('login', {
-  primary: 'orange',
-  warn: 'red'
-})
+// Vue.material.registerTheme('default', {
+//   primary: 'deep-orange',
+//   accent: 'blue-grey',
+//   warn: 'red',
+//   background: 'white'
+// })
+//
+// Vue.material.registerTheme('login', {
+//   primary: 'deep-orange',
+//   warn: 'red'
+// })
+//
+// Vue.material.registerTheme('bars', {
+//   primary: 'grey',
+//   warn: 'red'
+// })
 
 /* eslint-disable no-new */
 new Vue({

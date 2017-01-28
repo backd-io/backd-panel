@@ -1,13 +1,13 @@
 <template>
   <div id="app" class="container">
+    <top></top>
     <router-view></router-view>
     <bottom></bottom>
   </div>
 </template>
 
 <script>
-// <top></top>
-// import Top from './components/common/Top'
+import Top from './components/common/Top'
 import Bottom from './components/common/Bottom'
 // components: {
 //   Top,
@@ -16,16 +16,17 @@ import Bottom from './components/common/Bottom'
 
 export default {
   components: {
+    Top,
     Bottom
   },
   methods: {
     goIfLogged (to) {
-      console.log('goIfLogged: loggedIn=' + this.$store.state.Backd.LoggedIn)
       if (this.$store.state.Backd.LoggedIn === false) {
-        console.log(to.path)
-        if (to.path !== '') {
+        console.log('user not logged in')
+        console.log(this.$store.state.Backd)
+        if (to.path !== '/') {
           console.log('redirecting to /')
-          this.$router.push('')
+          this.$router.push('/')
         }
       }
     }

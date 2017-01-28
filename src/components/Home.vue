@@ -5,7 +5,7 @@
         <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="60" md-flex-large="60" md-flex-xlarge="70">
           <section class="text-center full-width" style="margin: auto 0">
             <p class="md-display-1">backd</p>
-            <p class="md-headline">application backend server</p>
+            <p class="md-headline">backend server for applications</p>
           </section>
         </md-layout>
         <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="40"  md-flex-large="40" md-flex-xlarge="30">
@@ -15,25 +15,24 @@
                 <h2 class="md-title" style="flex: 1">log in</h2>
               </md-toolbar>
             </div>
-            <form novalidate @submit.stop.prevent="submit" class="full-width padding-20">
+            <form novalidate @submit.stop.prevent="login" class="full-width padding-20">
               <md-input-container>
                 <label>Domain</label>
-                <md-input placeholder="domain" v-model="domain"></md-input>
+                <md-input placeholder="domain" v-model="domain" required></md-input>
               </md-input-container>
 
               <md-input-container>
                 <label>Username</label>
-                <md-input placeholder="username" v-model="username"></md-input>
+                <md-input placeholder="username" v-model="username" required></md-input>
               </md-input-container>
 
               <md-input-container md-has-password>
                 <label>Password</label>
-                <md-input type="password" placeholder="password" v-model="password"></md-input>
+                <md-input type="password" placeholder="password" v-model="password" @keyup.enter="login" required></md-input>
               </md-input-container>
 
-              <md-button class="md-raised md-primary" v-on:click="login">log in</md-button>
-              <md-button v-on:click="openSnack">forgot password</md-button>
-              <!-- <md-button disabled>{{ err }}</md-button> -->
+              <md-button class="md-primary" @click="login" :disabled="disableIfNotFilled()">log in</md-button>
+              <md-button>forgot password</md-button>
             </form>
           </div>
 
@@ -53,8 +52,7 @@ export default {
     return {
       domain: '',
       username: '',
-      password: '',
-      err: ''
+      password: ''
     }
   },
   methods: {
@@ -62,22 +60,28 @@ export default {
       var that = this
       // that.$store.state.Backd.Admin().Users().Add()
       that.$store.state.Backd.Identity().Auth().Basic(that.domain, that.username, that.password)
-      .then(function () {
-        that.err = 'Moo!'
-        that.$store.state.Backd.Identity().Domain().List()
-        .then(function (response) {
-          console.log('--- [0]')
-          console.log(response[0])
-        })
+      .then(function (response) {
+        console.log(response)
         that.$router.push({ path: '/domains' })
       })
-      .catch(function (response) {
-        console.log(response)
-        that.err = 'Unauthorized'
+      .catch(function (error) {
+        if (error.response.status === 401) {
+          eventBus.$emit('alert',
+          'Incorrect Credentials',
+          true, 'close', 10000, 'top', 'center')
+        } else {
+          eventBus.$emit('alert',
+          'Unexpected error. HTTP Error Code' + error.response.status,
+          true, 'close', 10000, 'top', 'center')
+        }
       })
     },
-    openSnack () {
-      eventBus.$emit('alert', 'You forgot the password', true, 'retry', 10000, 'top', 'center')
+    disableIfNotFilled () {
+      if (this.domain.length < 3 || this.username.length < 3 || this.password.length < 3) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

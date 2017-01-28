@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
 Vue.use(Vuex)
 
 import Backd from 'backd-js'
@@ -15,6 +16,9 @@ var backd = new Backd({
 
 export const store = new Vuex.Store({
   state: {
-    Backd: backd
+    Backd: backd,
+    admin: {
+      currentDomain: ''
+    }
   }
 })
