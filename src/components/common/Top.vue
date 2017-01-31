@@ -21,9 +21,12 @@ export default {
   methods: {
     signOut () {
       this.$store.state.Backd.Identity().Auth().LogOut()
+      this.$localStorage.set('token', '')
+      this.$localStorage.set('refresh_token', '')
+      this.$localStorage.set('expires_at', 0)
+      this.$router.push('/')
     }
   }
-
 }
 </script>
 

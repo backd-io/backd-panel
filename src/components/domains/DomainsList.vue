@@ -1,29 +1,25 @@
 <template lang="html">
-  <div>
-    <md-toolbar class="full-width md-accent" v-if="!showDomainSearch">
+  <div class="full-height">
+    <md-toolbar class="md-accent" v-if="!domainSearchShow">
       <span style="flex: 1"></span>
-      <md-button class="md-icon-button" @click="showDomainSearch = !showDomainSearch">
+      <md-button class="md-icon-button" @click="domainSearchShow = !domainSearchShow">
         <md-icon>search</md-icon>
       </md-button>
       <md-button class="md-icon-button" id="domainAdd" @click="openDialog('domainAdd')">
         <md-icon>add</md-icon>
       </md-button>
     </md-toolbar>
-    <md-toolbar class="full-width md-accent" v-if="showDomainSearch">
+    <md-toolbar class="md-accent" v-if="domainSearchShow">
       <md-input-container style="margin: 4px 0;">
         <md-input placeholder="search..." maxlength="16" v-model="domainSearch"></md-input>
       </md-input-container>
     </md-toolbar>
     <md-progress style="margin-top: -4px" class="md-warn" v-if="waiting" md-indeterminate></md-progress>
     <md-subheader v-if="domainSearch !== ''"><b>{{ domainSearchSubheader }}</b><a href @click.stop.prevent="clearDomainResults()">clear results</a></md-subheader>
-    <md-list class="full-width full-height">
+    <md-list class="full-height">
       <template v-for="domain in domains">
-      <md-list-item class="full-width" @click="selectDomain(domain.id)">
+      <md-list-item @click="selectDomain(domain)">
         {{ domain.id }}
-        <span style="flex: 1"></span>
-        <md-button class="md-icon-button" @click.stop.prevent="openDomainEdit(domain)">
-          <md-icon>edit</md-icon>
-        </md-button>
       </md-list-item>
       <md-divider></md-divider>
       </template>
@@ -82,7 +78,7 @@ export default {
       domain: {},
       domains: [],
       domainSearch: '',
-      showDomainSearch: false,
+      domainSearchShow: false,
       domainSearchSubheader: '',
       domainQueryTimeout: null
     }
@@ -93,7 +89,7 @@ export default {
       var query = ''
 
       that.waiting = true
-      console.log('querying....')
+      console.log('query domain ....')
       if (that.domainSearch !== '') {
         query = '{ "_id": "' + that.domainSearch + '" }'
         // query = '{ "_id": {\'$regex\': /^' + that.domainSearch + '/ }'
@@ -109,33 +105,22 @@ export default {
             that.domainSearchSubheader = 'Search: \'' + that.domainSearch + '\'. No results.  '
           } else {
             that.domainSearchSubheader = 'Search: \'' + that.domainSearch + '\' .  '
-            that.currentDomain = data[0].id
-            that.selectDomain(that.currentDomain)
+            that.domain = data[0]
+            that.selectDomain(that.domain)
           }
           that.waiting = false
         })
     },
-    selectDomain (id) {
-      eventBus.$emit('currentDomain', id)
+    selectDomain (domain) {
+      eventBus.domain = domain
+      eventBus.$emit('currentDomain', domain)
     },
     clearDomainResults () {
       this.domainSearch = ''
-      this.showDomainSearch = false
-    },
-    openDialog (ref) {
-      this.$refs[ref].open()
-    },
-    closeDialog (ref) {
-      this.$refs[ref].close()
-    },
-    openDomainEdit (domain) {
-      console.log(domain)
-      this.domain = domain
-      this.openDialog('domainEdit')
+      this.domainSearchShow = false
     },
     updateDomain () {
       var that = this
-      console.log('that.domain: ' + that.domain)
       that.$store.state.Backd.Identity().Domain().Update(that.domain)
       .then(function () {
         eventBus.$emit('alert',

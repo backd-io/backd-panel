@@ -62,9 +62,13 @@ export default {
       that.$store.state.Backd.Identity().Auth().Basic(that.domain, that.username, that.password)
       .then(function (response) {
         console.log(response)
+        that.$localStorage.set('token', that.$store.getters.currentToken)
+        that.$localStorage.set('refresh_token', that.$store.getters.currentRefreshToken)
+        that.$localStorage.set('expires_at', that.$store.getters.currentExpiresAt)
         that.$router.push({ path: '/domains' })
       })
       .catch(function (error) {
+        console.log(error)
         if (error.response.status === 401) {
           eventBus.$emit('alert',
           'Incorrect Credentials',

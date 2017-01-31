@@ -1,13 +1,11 @@
 <template>
   <div id="app" class="container">
-    <top></top>
     <router-view></router-view>
     <bottom></bottom>
   </div>
 </template>
 
 <script>
-import Top from './components/common/Top'
 import Bottom from './components/common/Bottom'
 // components: {
 //   Top,
@@ -16,7 +14,6 @@ import Bottom from './components/common/Bottom'
 
 export default {
   components: {
-    Top,
     Bottom
   },
   methods: {
@@ -38,6 +35,9 @@ export default {
     }
   },
   created () {
+    this.$store.state.Backd.security['token'] = this.$localStorage.get('token')
+    this.$store.state.Backd.security['refresh_token'] = this.$localStorage.get('refresh_token')
+    this.$store.state.Backd.security['expires_at'] = this.$localStorage.get('expires_at')
     this.goIfLogged(this.$route)
   }
 }

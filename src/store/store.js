@@ -16,9 +16,20 @@ var backd = new Backd({
 
 export const store = new Vuex.Store({
   state: {
-    Backd: backd,
-    admin: {
-      currentDomain: ''
+    Backd: backd
+  },
+  getters: {
+    loggedIn (state) {
+      return state.Backd.LoggedIn
+    },
+    currentToken (state) {
+      return state.Backd.security['token']
+    },
+    currentRefreshToken (state) {
+      return state.Backd.security['refresh_token']
+    },
+    currentExpiresAt (state) {
+      return state.Backd.security['expires_at']
     }
   }
 })

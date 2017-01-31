@@ -2,7 +2,8 @@ import Vue from 'vue'
 // eventBus
 export const eventBus = new Vue({
   data: {
-    logs: []
+    logs: [],
+    domain: {}
   },
   methods: {
     logAdd (logData) {

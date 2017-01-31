@@ -8,6 +8,8 @@ import 'vue-material/dist/vue-material.css'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueMaterial from 'vue-material'
+import VueLocalStorage from 'vue-localstorage'
+
 import App from './App'
 
 import Home from './components/Home'
@@ -32,6 +34,7 @@ const router = new VueRouter({
 
 Vue.use(VueRouter)
 Vue.use(VueMaterial)
+Vue.use(VueLocalStorage)
 
 Vue.material.registerTheme({
   default: {
@@ -51,7 +54,7 @@ Vue.material.registerTheme({
     warn: 'red'
   },
   bars: {
-    primary: 'orange',
+    primary: 'grey',
     warn: 'red'
   }
 })
@@ -79,5 +82,16 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  localStorage: {
+    token: {
+      type: String
+    },
+    refreshToken: {
+      type: String
+    },
+    expiresAt: {
+      type: Number
+    }
+  }
 }).$mount('#app')
